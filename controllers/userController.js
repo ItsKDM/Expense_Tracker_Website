@@ -1,6 +1,14 @@
 const path = require("path");
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+function generateAccessToken(id, email) {
+  return jwt.sign(
+    { userId: id, email: email },
+    "iwtbavsptnoeitbammpp"
+  );
+}
 
 exports.getLoginPage = (req, res, next) => {
   res.sendFile(path.join(__dirname, "../", "public", "views", "login.html"));
@@ -42,32 +50,30 @@ exports.postUserLogin = (req, res, next) => {
     if (user) {
       bcrypt.compare(password, user.password, (err, result) => {
         if (err) {
-          res
+          return res
             .status(500)
-            .send(
-              `<script>alert('Something went wrong!'); window.location.href='/'</script>`
-            );
+            .json({ success: false, message: "Something Went Wrong!" });
         }
         if (result === true) {
-          res
+          return res
             .status(200)
-            .send(
-              `<script>alert('Login Successful!'); window.location.href='/'</script>`
-            );
+            .json({
+              success: true, message: "Login Successful!", token: generateAccessToken(user.id, user.email),
+            });
         } else {
-          res
+          return res
             .status(401)
-            .send(
-              `<script>alert('Password Incorrect!'); window.location.href='/'</script>`
-            );
+            .json({
+              success: false, message: "Password Incorrect!",
+            });
         }
       });
     } else {
-      res
+      return res
         .status(404)
-        .send(
-          `<script>alert("User doesn't Exists!"); window.location.href='/'</script>`
-        );
+        .json({
+          success: false, message: "User doesn't exists!",
+        });
     }
   });
 };
