@@ -12,6 +12,7 @@ dotenv.config();
 const userRouter = require("./router/userRouter");
 const expenseRouter = require("./router/expenseRouter");
 const purchaseMembershipRouter = require("./router/purchaseMembershipRouter");
+const leaderboardRouter = require("./router/leaderboardRouter");
 
 const User = require("./models/userModel")
 const Expense = require("./models/expenseModel");
@@ -28,6 +29,7 @@ app.use("/user", userRouter);
 app.use("/homePage", expenseRouter);
 app.use("/expense", expenseRouter);
 app.use("/purchase", purchaseMembershipRouter);
+app.use("/premium", leaderboardRouter);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
