@@ -85,6 +85,7 @@ const postUserLogin = (req, res, next) => {
   });
 };
 
+//getAllUser
 const getAllUsers = (req, res, next) => {
   User.findAll({
     attributes: [

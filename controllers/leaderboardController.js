@@ -31,5 +31,5 @@ exports.getLeaderboardPage = (req, res, next) => {
 //       }));
 //       res.send(JSON.stringify(result));
 //     })
-//     .catch((err) => console.log(err));
+//     .catch((err) => console.log(err))
 // };

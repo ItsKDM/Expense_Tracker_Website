@@ -86,5 +86,5 @@ exports.editExpense = (req, res, next) => {
     .then((result) => {
       res.redirect("/homePage");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err))
 };
