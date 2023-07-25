@@ -1,9 +1,14 @@
+// const Razorpay = require("razorpay");
+
 const categoryItems = document.querySelectorAll(".dropdown-item");
 const categoryInput = document.querySelector("#categoryInput");
 const categoryBtn = document.querySelector("#categoryBtn");
 const form = document.getElementById("form1");
 const addExpenseBtn = document.getElementById("submitBtn");
 const table = document.getElementById("tbodyId");
+const reportsLink = document.getElementById("reportsLink");
+const buyPremiumBtn = document.getElementById("buyPremiumBtn");
+const leaderboardLink = document.getElementById("leaderboardLink");
 
 categoryItems.forEach((item) => {
   item.addEventListener("click", (e) => {
@@ -189,7 +194,7 @@ async function editExpense(e) {
                 description: descriptionValue.value,
                 amount: amountValue.value,
               },
-              {headers: {Authorization: token}}
+              { headers: { Authorization: token } }
             );
             window.location.reload();
           });
@@ -200,9 +205,67 @@ async function editExpense(e) {
     (err) => console.log(err);
   }
 }
-addExpenseBtn.addEventListener("click", addExpense);
+async function buyPremium(e) {
+  const token = localStorage.getItem("token");
+  const res = await axios.get(
+    "http://localhost:3000/purchase/premiumMembership",
+    { headers: { Authorization: token } }
+  );
 
-document.addEventListener("DOMContentLoaded", getAllExpenses);
+  console.log(res);
+  var options = {
+    key: res.data.key_id,
+    order_id: res.data.order.id,
+
+    handler: async function (response) {
+      const res = await axios.post(
+        "http://localhost:3000/purchase/updateTransactionStatus", {
+        order_id: options.order_id,
+        payment_id: options.razorpay_payment_id,
+      },
+        { headers: { Authorization: token } }
+      ).then(() => {
+        alert("Welcome to our Premium Membership, You have now Access to Reports and Leaderboards");
+      }).catch(() => {
+        alert('Something went Wrong. Try Again!')
+      })
+      // console.log(res);
+      // alert(
+      //   "Welcome to our Premium Membership, You have now Access to Reports and Leaderboards"
+      // );
+      localStorage.setItem("token", res.data.token);
+    },
+  };
+  const rzp1 = new Razorpay(options);
+  rzp1.open();
+  e.preventDefault();
+
+  rzp1.on('payment.failed', function(response) {
+    alert(response.error.code);
+    alert(response.error.description);
+    alert(response.error.source);
+    alert(response.error.step);
+    alert(response.error.reason);
+    alert(response.error.metadata.order_id);
+    alert(response.error.metadata.payment_id);
+  })
+}
+
+async function isPremiumUser() {
+  const token = localStorage.getItem("token");
+  const res = await axios.get("http://localhost:3000/user/isPremiumUser", {
+    headers: { Authorization: token },
+  });
+  if(res.data.isPremiumUser){
+    buyPremiumBtn.innerHTML = "Premium Member &#128081";
+    reportsLink.removeAttribute("onclick");
+    leaderboardLink.removeAttribute("onclick");
+  }
+}
+
+buyPremiumBtn.addEventListener("click", buyPremium);
+addExpenseBtn.addEventListener("click", addExpense);
+document.addEventListener("DOMContentLoaded", isPremiumUser, getAllExpenses);
 
 table.addEventListener("click", (e) => {
   deleteExpense(e);

@@ -10,10 +10,16 @@ function generateAccessToken(id, email) {
   );
 }
 
-exports.getLoginPage = (req, res, next) => {
+const isPremiumUser = (req, res, next) => {
+  if(req.user.isPremiumUser) {
+    return res.json({isPremiumUser: true});
+  }
+};
+
+const getLoginPage = (req, res, next) => {
   res.sendFile(path.join(__dirname, "../", "public", "views", "login.html"));
 };
-exports.postUserSignUp = (req, res, next) => {
+const postUserSignUp = (req, res, next) => {
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
@@ -42,7 +48,7 @@ exports.postUserSignUp = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
-exports.postUserLogin = (req, res, next) => {
+const postUserLogin = (req, res, next) => {
   const email = req.body.loginEmail;
   const password = req.body.loginPassword;
 
@@ -76,4 +82,12 @@ exports.postUserLogin = (req, res, next) => {
         });
     }
   });
+};
+
+module.exports = {
+  generateAccessToken,
+  getLoginPage,
+  postUserLogin,
+  postUserSignUp,
+  isPremiumUser,
 };
