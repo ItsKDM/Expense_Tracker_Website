@@ -7,6 +7,8 @@ router.use(express.static("public"));
 
 router.get("/", userController.getLoginPage);
 router.get("/isPremiumUser", userAuthentication, userController.isPremiumUser);
+router.get("/getAllUsers", userController.getAllUsers);
+
 router.post("/login", userController.postUserLogin);
 router.post("/signUp", userController.postUserSignUp);
 
