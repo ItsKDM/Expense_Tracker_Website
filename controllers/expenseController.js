@@ -1,6 +1,6 @@
 const path = require("path");
 const Expense = require("../models/expenseModel");
-const database = require("../util/database");
+// const database = require("../util/database");
 const sequelize = require("../util/database");
 const User = require("../models/userModel");
 
