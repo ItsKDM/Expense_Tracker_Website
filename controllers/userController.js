@@ -8,7 +8,7 @@ const Sib = require("sib-api-v3-sdk");
 function generateAccessToken(id, email) {
   return jwt.sign(
     { userId: id, email: email },
-    "iwtbavsptnoeitbammpp"
+    process.env.TOKEN
   );
 }
 

@@ -296,7 +296,7 @@ async function buyPremium(e) {
     { headers: { Authorization: token } }
   );
 
-  console.log(res);
+  // console.log(res);
   var options = {
     key: res.data.key_id,
     order_id: res.data.order.id,

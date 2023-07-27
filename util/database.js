@@ -1,5 +1,8 @@
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize("expense_tracker", "root", "Application@121", {
+const sequelize = new Sequelize(
+    DB_SCHEMA,
+    DB_USER,
+    DB_PASSWORD, {
     dialect: "mysql",
     host: "localhost"
 });

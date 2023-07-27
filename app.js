@@ -3,11 +3,30 @@ const app = express();
 let cors = require("cors")
 
 const sequelize = require("./util/database");
+const path = require("path");
+const fs = require("fs");
 
 const bodyParser = require("body-parser");
 
 const dotenv = require('dotenv');
 dotenv.config();
+const helmet = require("helmet");
+
+app.use(
+    helmet({
+        contentSecurityPolicy: false,
+        crossOriginEmbedderPolicy: false,
+    })
+);
+
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, "access.log"),
+    {flags: "a"}
+);
+
+const morgan = require("morgan");
+app.use(morgan("combined", {stream: accessLogStream}));
+
 
 const userRouter = require("./router/userRouter");
 const expenseRouter = require("./router/expenseRouter");
@@ -47,6 +66,6 @@ User.hasMany(ResetPassword);
 
 // app.listen(3000);
 sequelize.sync().then((result) => {
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
 })
 .catch((err) => console.log(err));
