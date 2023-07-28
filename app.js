@@ -2,14 +2,14 @@ const express = require("express");
 const app = express();
 let cors = require("cors")
 
+const dotenv = require('dotenv');
+dotenv.config();
 const sequelize = require("./util/database");
 const path = require("path");
 const fs = require("fs");
 
 const bodyParser = require("body-parser");
 
-const dotenv = require('dotenv');
-dotenv.config();
 const helmet = require("helmet");
 
 app.use(
