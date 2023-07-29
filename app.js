@@ -65,7 +65,7 @@ ResetPassword.belongsTo(User);
 User.hasMany(ResetPassword);
 
 // app.listen(3000);
-sequelize.sync().then((result) => {
+sequelize.sync().then(() => {
     app.listen(process.env.PORT || 3000);
 })
 .catch((err) => console.log(err));
